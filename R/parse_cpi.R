@@ -25,3 +25,20 @@ nomeArqRds <- function(N.arq){
 
 
 
+## Checa se arquivo já existe no computador. Se não existir, o baixa.
+arq_existente <- function(N.arq){
+  nomearq = paste0(nomeArqRds(N.arq),"Rds")
+  testeExisteArq = file.exists(paste0(getwd(),nomearq))
+
+  if (testeExisteArq) {
+    message("Arquivo \"", nomearq, "\" já existe.")
+  }  else {
+    message("Arquivo \"", nomearq, "\" NÃO existe localmente no diretório. Processando...")
+    if (is.na(nt.reunioes.df[N.arq,]$link_notaTaquigrafica)) {
+      message("Ops! Porém não há ainda link disponível para esta nota taquigráfica.")
+    } else{
+      func_DB_NT(N.arq)
+      Sys.sleep(5.5)
+    }
+  }
+}
