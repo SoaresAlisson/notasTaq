@@ -1,5 +1,8 @@
-# Função que
-# faz o parser da nota taquigráfica, o estruturando em um data.frame salvo em rds e csv
+#' Parser de notas taquigráficas do Senado
+#'
+#' Função que faz o parser da nota taquigráfica, o estruturando em um data.frame salvo em rds e csv
+#'
+#' @param
 
 
 func_DB_NT <- function(linha){

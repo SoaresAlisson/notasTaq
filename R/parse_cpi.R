@@ -15,7 +15,7 @@ dir.create(paste0(getwd(),"/csv"), showWarnings = F)
 
 
 
-nt.reunioes.df <- reunioes(url)
+# nt.reunioes.df <- reunioes(url)
 
 
 nomeArqRds <- function(N.arq){
