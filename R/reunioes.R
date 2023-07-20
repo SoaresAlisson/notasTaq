@@ -1,33 +1,52 @@
-#' lendo a página html com todas as reuniões e retorna um tibble
+#' return a tibble(data.frame) with information about reunions in comissions
 #'
-
+#' it read the page of the specified comission and return a tibble with many
+#' information, like: date, number of reunion, description, links
+#'
 # url = "https://legis.senado.leg.br/comissoes/comissao?codcol=2606&data1=2023-05-25&data2=2023-08-12"
-
 #' @param cod The code of the reunion
-#' @param start The start date
-#' @param end The end date, If no parameter is given, it uses the actual date
+#' @param start The start date. When the comission was created
+#' @param end (optional) The end date. If no parameter is given, it uses the
+#' actual date, given by Sys.Date()
 #'
 #' @examples
+#' reunions(cod = "2606", start = "2023-05-25")
 #' reunions(cod = "2606", start = "2023-05-25", end ="2023-08-12")
 #'
 #' @export
 reunions <- function(cod, start, end = Sys.Date() ){
-  library(dplyr)
-  url <- paste0("https://legis.senado.leg.br/comissoes/comissao?codcol=", cod, "&data1=", start, "&data2=", end )
-  reunioes <- rvest::read_html(url)
-  reunioes.vetor <- reunioes |> rvest::html_elements('.row:nth-child(2) .content .col-md-12')
+   library(stringr, quietly = T )
+    # extract the code if the code provided is not only numbers
+  if (!str_detect(cod, "^\\d+$") ) {
+    cod <- str_replace(cod , ".*codcol=(\\d+).*", "\\1")
+  }
 
-  datas.vetor <- reunioes.vetor  |> rvest::html_element('a:nth-child(1) span:nth-child(1)') |> rvest::html_text() %>%
+  url <- paste0("https://legis.senado.leg.br/comissoes/comissao?codcol=", cod, "&data1=", start, "&data2=", end )
+
+  reunioes <- rvest::read_html(url)
+
+  reunioes.vetor <- reunioes %>% rvest::html_elements('.row:nth-child(2) .content .col-md-12')
+
+  datas.vetor <- reunioes.vetor  %>% rvest::html_element('a:nth-child(1) span:nth-child(1)') %>% rvest::html_text() %>%
     grep("^$", .,value=T, invert = T) %>%
     gsub("([0-9]{2})/([0-9]{2})/([0-9]{4})", "\\3-\\2-\\1", .)
-  reuniao_dia <-  reunioes.vetor |> rvest::html_element('span+ span') |> rvest::html_text()  %>%
+
+  reuniao_dia <-  reunioes.vetor %>% rvest::html_element('span+ span') %>% rvest::html_text()  %>%
     grep("Reunião", .,value = T) %>%
-    gsub("([0-9]+).*Reunião.*", "\\1", .) |> as.integer()
-  Depoente.tema <-  reunioes.vetor  |> rvest::html_element('.f2') |> rvest::html_text()
+    gsub("([0-9]+).*Reunião.*", "\\1", .) %>% as.integer()
 
-  link_notaTaquigrafica <- reunioes.vetor  |> rvest::html_element('.bgc-cpmi:nth-child(4) a, .bgc-cpmi:nth-child(4) a') |> rvest::html_attr('href')
+  Depoente.tema <-  reunioes.vetor  %>% rvest::html_element('.f2') %>% rvest::html_text()
 
-  tibble::tibble(data = datas.vetor, reuniao_dia, Depoente.tema, link_notaTaquigrafica)
+  link_notaTaquigrafica <- reunioes.vetor  %>% rvest::html_element('.bgc-cpmi:nth-child(4) a, .bgc-cpmi:nth-child(4) a') %>% rvest::html_attr('href')
+
+ reunDF <- tibble::tibble(data = datas.vetor,
+                          reuniao_dia, Depoente.tema, link_notaTaquigrafica)
+ # metadata = list(cod = cod)
+ attr(reunDF, "cod") <- cod
+
+ dir.create(paste0(getwd(),"/", cod, "/rds"), recursive = T, showWarnings = F)
+ dir.create(paste0(getwd(), "/", cod, "/csv"),  recursive = T, showWarnings = T)
+
+ reunDF
 }
-
 

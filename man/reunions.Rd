@@ -2,21 +2,24 @@
 % Please edit documentation in R/reunioes.R
 \name{reunions}
 \alias{reunions}
-\title{lendo a página html com todas as reuniões e retorna um tibble}
+\title{return a tibble(data.frame) with information about reunions in comissions}
 \usage{
 reunions(cod, start, end = Sys.Date())
 }
 \arguments{
 \item{cod}{The code of the reunion}
 
-\item{start}{The start date}
+\item{start}{The start date. When the comission was created}
 
-\item{end}{The end date, If no parameter is given, it uses the actual date}
+\item{end}{(optional) The end date. If no parameter is given, it uses the
+actual date, given by Sys.Date()}
 }
 \description{
-lendo a página html com todas as reuniões e retorna um tibble
+it read the page of the specified comission and return a tibble with many
+information, like: date, number of reunion, description, links
 }
 \examples{
+reunions(cod = "2606", start = "2023-05-25")
 reunions(cod = "2606", start = "2023-05-25", end ="2023-08-12")
 
 }
