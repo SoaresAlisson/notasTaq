@@ -2,16 +2,16 @@
 % Please edit documentation in R/parser.R
 \name{parser}
 \alias{parser}
-\title{parses the tacquigraphic notes}
+\title{parse the tacquigraphic notes text}
 \usage{
-parser(DF, linha, save = T)
+parser(DF, linha, save = FALSE)
 }
 \arguments{
 \item{DF}{the dataframe generated with reunions()}
 
 \item{linha}{number of the line of the dataframe generated with reunions()}
 
-\item{save}{= TRUE (default). To save the files in .rds and .csv.}
+\item{save}{= FALSE (default). To save the files in .rds and .csv.}
 }
 \description{
 turns the pure text of the tacquigraphic notes, into

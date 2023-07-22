@@ -2,7 +2,7 @@
 % Please edit documentation in R/reunioes.R
 \name{reunions}
 \alias{reunions}
-\title{return a tibble(data.frame) with information about reunions in comissions}
+\title{return a tibble(data.frame) with information about the reunions}
 \usage{
 reunions(cod, start, end = Sys.Date())
 }
@@ -21,5 +21,6 @@ information, like: date, number of reunion, description, links
 \examples{
 reunions(cod = "2606", start = "2023-05-25")
 reunions(cod = "2606", start = "2023-05-25", end ="2023-08-12")
+reunions("https://legis.senado.leg.br/comissoes/comissao?codcol=2602", start = "2023-02-02")
 
 }

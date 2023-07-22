@@ -3,5 +3,7 @@
 export(TodosPartidos)
 export(bindAll_TN)
 export(download_all)
+export(get_all_tn)
+export(get_info)
 export(parser)
 export(reunions)

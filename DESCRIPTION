@@ -14,5 +14,7 @@ RoxygenNote: 7.2.3
 Date: 2023-07-17
 Imports: 
     dplyr,
+    tibble,
     rvest,
-    stringr
+    stringr,
+    purrr

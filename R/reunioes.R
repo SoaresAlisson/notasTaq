@@ -1,4 +1,4 @@
-#' return a tibble(data.frame) with information about reunions in comissions
+#' return a tibble(data.frame) with information about the reunions
 #'
 #' it read the page of the specified comission and return a tibble with many
 #' information, like: date, number of reunion, description, links
@@ -12,18 +12,25 @@
 #' @examples
 #' reunions(cod = "2606", start = "2023-05-25")
 #' reunions(cod = "2606", start = "2023-05-25", end ="2023-08-12")
+#' reunions("https://legis.senado.leg.br/comissoes/comissao?codcol=2602", start = "2023-02-02")
 #'
 #' @export
 reunions <- function(cod, start, end = Sys.Date() ){
    library(stringr, quietly = T )
+
     # extract the code if the code provided is not only numbers
-  if (!str_detect(cod, "^\\d+$") ) {
-    cod <- str_replace(cod , ".*codcol=(\\d+).*", "\\1")
+  if (!stringr::str_detect(cod, "^\\d+$") ) {
+    cod <- stringr::str_replace(cod , ".*codcol=(\\d+).*", "\\1")
   }
 
   url <- paste0("https://legis.senado.leg.br/comissoes/comissao?codcol=", cod, "&data1=", start, "&data2=", end )
 
   reunioes <- rvest::read_html(url)
+
+  # data_start <- get_start_date(reunioes)
+  # if(exists(data_start)){
+  #   message(paste("Sugested begin data: ", as.character(data_start) ))
+  # }
 
   reunioes.vetor <- reunioes %>% rvest::html_elements('.row:nth-child(2) .content .col-md-12')
 
@@ -37,15 +44,12 @@ reunions <- function(cod, start, end = Sys.Date() ){
 
   Depoente.tema <-  reunioes.vetor  %>% rvest::html_element('.f2') %>% rvest::html_text()
 
-  link_notaTaquigrafica <- reunioes.vetor  %>% rvest::html_element('.bgc-cpmi:nth-child(4) a, .bgc-cpmi:nth-child(4) a') %>% rvest::html_attr('href')
+  link <- reunioes.vetor  %>% rvest::html_element('.bgc-cpi:nth-child(4) a, .bgc-cpmi:nth-child(4) a') %>% rvest::html_attr('href')
 
  reunDF <- tibble::tibble(data = datas.vetor,
-                          reuniao_dia, Depoente.tema, link_notaTaquigrafica)
+                          reuniao_dia, Depoente.tema, link)
  # metadata = list(cod = cod)
  attr(reunDF, "cod") <- cod
-
- dir.create(paste0(getwd(),"/", cod, "/rds"), recursive = T, showWarnings = F)
- dir.create(paste0(getwd(), "/", cod, "/csv"),  recursive = T, showWarnings = T)
 
  reunDF
 }
