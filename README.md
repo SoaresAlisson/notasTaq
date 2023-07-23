@@ -7,15 +7,19 @@
 
 **PACOTE AINDA EM FASE DE TESTES !!**
 
-**PACKAGE WORKING, But still under test**
+**PACKAGE WORKING, but still under test**
 
 The goal of notasTaq package (an abbreviation of the portuguese “Notas
 taquigráficas”) is to retrieve all tacquigraphic notes (transcription of
 speeches) from the Brazilian Senate’s specific commissions and return a
-single structured tibble/dataframe. This allows users to filter its
-content according to meetings, names, parties, states, etc., and perform
-some Text Analysis. It is a further development of the *ad hoc* script
-[NotasTaquigraficas - CPI da
+single structured tibble/dataframe, like this [csv of commission about
+the 8th
+january](https://github.com/SoaresAlisson/notasTaq/blob/main/csv/nt2606.csv)
+(the [storming of Brazilian government
+buildings)](https://en.wikipedia.org/wiki/2023_Brazilian_Congress_attack).
+This allows users to filter its content according to meetings, names,
+parties, states, etc., and perform some Text Analysis. It is a further
+development of the *ad hoc* script [NotasTaquigraficas - CPI da
 Pandemia](https://github.com/SoaresAlisson/NotasTaquigraficas).
 
 <!-- O script pega as Notas Taquigráficas e a estrutura em dataframes .Rds e tabelas .csv. -->
