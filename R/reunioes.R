@@ -15,7 +15,7 @@
 #' reunions("https://legis.senado.leg.br/comissoes/comissao?codcol=2602", start = "2023-02-02")
 #'
 #' @export
-reunions <- function(cod, start, end = Sys.Date() ){
+meetings <- function(cod, start, end = Sys.Date() ){
    library(stringr, quietly = T )
 
     # extract the code if the code provided is not only numbers
