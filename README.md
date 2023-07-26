@@ -1,6 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![Github All
+Releases](https://img.shields.io/github/downloads/SoaresAlisson/notasTaq/total.svg)]()
+
 # notasTaq - a parser of brazilian Senate’s tacquigraphic notes
 
 <!-- badges: start -->
@@ -12,8 +15,8 @@
 The goal of notasTaq package (an abbreviation of the portuguese “Notas
 taquigráficas”) is to retrieve all tacquigraphic notes (transcription of
 speeches) from the Brazilian Senate’s specific commissions and return a
-single structured tibble/dataframe, like this [csv of commission about
-the 8th
+single structured tibble/dataframe, like this [csv of the commission
+about the 8th
 january](https://github.com/SoaresAlisson/notasTaq/blob/main/csv/nt2606.csv)
 (the [storming of Brazilian government
 buildings)](https://en.wikipedia.org/wiki/2023_Brazilian_Congress_attack).

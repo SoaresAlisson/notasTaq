@@ -11,7 +11,6 @@
 #' @export
 get_all_tn <- function(DF){
    DF2 <- DF |> dplyr::filter(!is.na( link ))
-  # lapply(1:nrow(DF2), function(x) parser(DF2, x)) |>  purrr::reduce(rbind)
 
   parser2 <- function(DFpars, i) {
     message(paste("running", i, "of", nrow(DFpars) ))
