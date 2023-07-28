@@ -7,9 +7,9 @@
 parser(DF, linha, save = FALSE)
 }
 \arguments{
-\item{DF}{the dataframe generated with reunions()}
+\item{DF}{the dataframe generated with meetings()}
 
-\item{linha}{number of the line of the dataframe generated with reunions()}
+\item{linha}{number of the line of the dataframe generated with meetings()}
 
 \item{save}{= FALSE (default). To save the files in .rds and .csv.}
 }
@@ -18,7 +18,7 @@ turns the pure text of the tacquigraphic notes, into
 an structured tibble/ data.frame, and saves it in .rds and .csv
 }
 \examples{
-df <- reunions(cod = "2606", start = "2023-05-25")
+df <- meetings(cod = "2606", start = "2023-05-25")
 parser( df, 1 )
 
 }

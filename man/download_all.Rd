@@ -7,9 +7,9 @@
 download_all(DF)
 }
 \description{
-To download all the links in the dataframe created with reunions().
+To download all the links in the dataframe created with meetings().
 First, it checks if the file do not exist, than save it. If the file is already
-available, it jumps to the next line.
+available, it jumps to the next line and proceed it again.
 }
 \examples{
 download_all( DF )

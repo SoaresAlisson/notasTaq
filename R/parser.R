@@ -19,20 +19,24 @@ siglas.estados <- "\\b(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|
 #'
 #' turns the pure text of the tacquigraphic notes, into
 #' an structured tibble/ data.frame, and saves it in .rds and .csv
-#' @param DF the dataframe generated with reunions()
-#' @param linha number of the line of the dataframe generated with reunions()
+#' @param DF the dataframe generated with meetings()
+#' @param linha number of the line of the dataframe generated with meetings()
 #' @param save = FALSE (default). To save the files in .rds and .csv.
 #'
 #' @examples
-#' df <- reunions(cod = "2606", start = "2023-05-25")
+#' df <- meetings(cod = "2606", start = "2023-05-25")
 #' parser( df, 1 )
 #'
 #' @export
 parser <- function(DF, linha, save = FALSE){
 
-  # nt.reunioes.df <- DF
+    cod <- attr(DF, "cod")
 
-  message("Processando: ", DF[linha, 2],", ", DF[linha,3] ,"\". Analisando url: \"",DF[linha, 4],"\"")
+  message('Processing ',
+          "cod:", cod,
+          ", meeting: ", DF[linha, 2],
+          ', "', DF[linha,3] ,
+          "\", from the URL: \"",DF[linha, 4],"\"")
 
   url_atual <- DF[linha, 'link'] %>% as.character()
 
@@ -42,7 +46,6 @@ parser <- function(DF, linha, save = FALSE){
   # texto da pagina
   texto <- NT_html %>% rvest::html_nodes('.escriba-jq') %>% rvest::html_text()
   alerta <- NT_html %>% rvest::html_element('.alert') %>% rvest::html_text()
-  # message("Aviso no arquivo: ", alerta)
 
   texto_vetores0 = gsub('[0-9]{2}\\:[0-9]{2}  R|\\(Pausa\\.\\)', '', texto) %>%
     gsub('(O SR|A SRA)\\.', 'ZZZVECTOR_\\1\\.', .) %>% strsplit(. , "ZZZVECTOR_") %>% unlist()
@@ -88,10 +91,6 @@ parser <- function(DF, linha, save = FALSE){
     dplyr::mutate(estado = stringr::str_extract(BlocoParl, siglas.estados ), .after = BlocoParl) %>%
     dplyr::mutate(partido = stringr::str_extract(BlocoParl, TodosPartidosER), .before = estado)
 
-  # message(str(DF) )
-  attr(NTDB, "cod") <- attr(DF, "cod")
-  cod <- attr(DF, "cod")
-  message( paste("Cod col:", cod ))
 
   if (save) {  ## Salvando csv rds rdata
         nomearq = paste0("NT_",DF[linha,]$reuniao_dia, "-", DF[linha,]$Depoente.tema) %>% gsub("ª|,", "",.) %>% gsub(" - ", "-", .) %>% gsub(" ", "_",.)

@@ -1,32 +1,63 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+<!-- https://badge-size.herokuapp.com/{username}/{repo}/{branch}/{filename} -->
 
 [![Github All
 Releases](https://img.shields.io/github/downloads/SoaresAlisson/notasTaq/total.svg)]()
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+<!-- Made with R -->
+<!-- ![](https://img.shields.io/badge/Made%20with-R-blue.svg)  -->
 
-# notasTaq - a parser of brazilian Senate’s tacquigraphic notes
+![R
+package](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
+<!-- [![License Compliance](https://github.com/deepset-ai/haystack/actions/workflows/license_compliance.yml/badge.svg)](https://github.com/deepset-ai/haystack/actions/workflows/license_compliance.yml) -->
+<!-- badges: end -->
 
-<!-- badges: start -->
+# notasTaq
 
-**PACOTE AINDA EM FASE DE TESTES !!**
+## A parser of Brazilian Senate’s tacquigraphic notes
 
-**PACKAGE WORKING, but still under test**
+<!-- **PACOTE AINDA EM FASE DE TESTES !!** -->
+<!-- **PACKAGE WORKING, but still under test** -->
 
 The goal of notasTaq package (an abbreviation of the portuguese “Notas
 taquigráficas”) is to retrieve all tacquigraphic notes (transcription of
 speeches) from the Brazilian Senate’s specific commissions and return a
-single structured tibble/dataframe, like this [csv of the commission
-about the 8th
-january](https://github.com/SoaresAlisson/notasTaq/blob/main/csv/nt2606.csv)
-(the [storming of Brazilian government
-buildings)](https://en.wikipedia.org/wiki/2023_Brazilian_Congress_attack).
-This allows users to filter its content according to meetings, names,
-parties, states, etc., and perform some Text Analysis. It is a further
-development of the *ad hoc* script [NotasTaquigraficas - CPI da
+single structured tibble/dataframe, allowing users to filter its content
+according to meetings, names, parties, states, etc., so that they can
+perform Text Analysis. This package is a further development of the *ad
+hoc* script [NotasTaquigraficas - CPI da
 Pandemia](https://github.com/SoaresAlisson/NotasTaquigraficas).
 
 <!-- O script pega as Notas Taquigráficas e a estrutura em dataframes .Rds e tabelas .csv. -->
-<!-- badges: end -->
+
+The basic operation of the {notasTaq} package takes pure text like this
+([link](https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/10342)):
+
+<figure>
+<img src="./readme_data/rstudio_nt2441.69_site.png"
+alt="Example of Senate’s tacquigraphic notes" />
+<figcaption aria-hidden="true">Example of Senate’s tacquigraphic
+notes</figcaption>
+</figure>
+
+And transforms into this:
+
+<figure>
+<img src="./readme_data/rstudio_nt2441.69.png"
+alt="Example of a dataframe generated with {notasTaq}" />
+<figcaption aria-hidden="true">Example of a dataframe generated with
+{notasTaq}</figcaption>
+</figure>
+
+If you want to check out a file, see this [csv of the commission about
+the 8th
+january](https://github.com/SoaresAlisson/notasTaq/blob/main/csv/nt2606.csv)
+(the [storming of Brazilian government
+buildings)](https://en.wikipedia.org/wiki/2023_Brazilian_Congress_attack).
 
 ## Installation
 
@@ -108,21 +139,22 @@ Alternatively, it is also possible to specify the:
 ``` r
 reunioesDF <- notasTaq::meetings(cod = "2606", start = "2023-05-25", end = "2023-08-12")
 reunioesDF 
-#> # A tibble: 12 × 4
+#> # A tibble: 13 × 4
 #>    data       reuniao_dia Depoente.tema                                    link 
 #>    <chr>            <int> <chr>                                            <chr>
-#>  1 2023-07-11           8 1ª PARTE - Depoimento de Mauro Cesar Barbosa Ci… http…
-#>  2 2023-07-11           8 1ª PARTE - Depoimento de Mauro Cesar Barbosa Ci… http…
-#>  3 2023-07-04           8 Oitiva de Mauro César Barbosa Cid                <NA> 
-#>  4 2023-06-27           7 1ª PARTE - Oitiva de Jean Lawand Junior, 2ª PAR… http…
-#>  5 2023-06-26           6 Oitiva de Jorge Eduardo Naime                    http…
-#>  6 2023-06-22           5 1ª PARTE - Oitiva de Valdir Pires Dantas Filho,… http…
-#>  7 2023-06-20           4 1ª PARTE - Oitiva de Silvinei Vasques, 2ª PARTE… http…
-#>  8 2023-06-13           3 Deliberativa                                     http…
-#>  9 2023-06-07           3 Deliberativa                                     <NA> 
-#> 10 2023-06-06           2 Apresentação e apreciação do plano de trabalho.  http…
-#> 11 2023-06-01           2 Apresentação e apreciação do plano de trabalho.  <NA> 
-#> 12 2023-05-25           1 Instalação e Eleição                             http…
+#>  1 2023-08-01           9 Oitiva                                           http…
+#>  2 2023-08-01           9 Oitiva                                           <NA> 
+#>  3 2023-07-11           8 1ª PARTE - Depoimento de Mauro Cesar Barbosa Ci… http…
+#>  4 2023-07-04           8 Oitiva de Mauro César Barbosa Cid                <NA> 
+#>  5 2023-06-27           7 1ª PARTE - Oitiva de Jean Lawand Junior, 2ª PAR… http…
+#>  6 2023-06-26           6 Oitiva de Jorge Eduardo Naime                    http…
+#>  7 2023-06-22           5 1ª PARTE - Oitiva de Valdir Pires Dantas Filho,… http…
+#>  8 2023-06-20           4 1ª PARTE - Oitiva de Silvinei Vasques, 2ª PARTE… http…
+#>  9 2023-06-13           3 Deliberativa                                     http…
+#> 10 2023-06-07           3 Deliberativa                                     <NA> 
+#> 11 2023-06-06           2 Apresentação e apreciação do plano de trabalho.  http…
+#> 12 2023-06-01           2 Apresentação e apreciação do plano de trabalho.  <NA> 
+#> 13 2023-05-25           1 Instalação e Eleição                             http…
 ```
 
 To get some basic information about a commission, use the function
@@ -168,7 +200,13 @@ meetings(info$codcol, info$start_date)
 #> # ℹ 36 more rows
 ```
 
-### Step 2a - Downloading one file
+## Step 2 - Getting the transcritpions
+
+We will first show to get the transcriptions of tacquigraphic notes
+downloading the files of meetings and then how to get it without
+downloading.
+
+### Step 2a 1 - Downloading one file
 
 You don’t have to, but you can save the individual files of meetings
 locally on your machine. Now that we have a dataframe with all the
@@ -183,12 +221,16 @@ file in the /rds folder.
 
 ``` r
 nt <- parser(reunioesDF, 1, save = TRUE)
-#> Processando: 8, 1ª PARTE - Depoimento de Mauro Cesar Barbosa Cid, 2ª PARTE - Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/11621"
-#> Cod col: 2606
+str( nt )
+```
+
+``` r
+nt <- parser(reunioesDF, 1, save = TRUE)
+#> Processing cod:2606, meeting: 9, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/11621"
 str( nt )
 #> tibble [1,046 × 9] (S3: tbl_df/tbl/data.frame)
 #>  $ reuniao        : chr [1:1046] "8" "8" "8" "8" ...
-#>  $ data           : chr [1:1046] "2023-07-11" "2023-07-11" "2023-07-11" "2023-07-11" ...
+#>  $ data           : chr [1:1046] "2023-08-01" "2023-08-01" "2023-08-01" "2023-08-01" ...
 #>  $ nome           : chr [1:1046] "Arthur Oliveira Maia" "MARCOS ROGÉRIO" "Arthur Oliveira Maia" "MARCOS ROGÉRIO" ...
 #>  $ funcao_blocoPar: chr [1:1046] "PRESIDENTE" "(PL - RO)" "PRESIDENTE" "(PL - RO)" ...
 #>  $ BlocoParl      : chr [1:1046] "(Arthur Oliveira Maia. UNIÃO - BA. Fala da Presidência.)" "(PL - RO)" "(Arthur Oliveira Maia. UNIÃO - BA)" "(PL - RO)" ...
@@ -196,7 +238,6 @@ str( nt )
 #>  $ estado         : chr [1:1046] "BA" "RO" "BA" "RO" ...
 #>  $ complemento    : chr [1:1046] "Fala da Presidência" "" "" "" ...
 #>  $ fala           : chr [1:1046] "Havendo número regimental, declaro aberta a 8ª Reunião da Comissão Parlamentar Mista de Inquérito criada pelo R"| __truncated__ "Sr. Presidente... " "Com a palavra, o Senador Rogério. " "Marcos Rogério. " ...
-#>  - attr(*, "cod")= chr "2606"
 
 head(nt, 5) # only the first lines
 #> # A tibble: 5 × 9
@@ -229,7 +270,8 @@ the code of the commission that we passed in reunion().
 - `funcao_blocoPar`: Information such as function (if president) or
   parlamentary bloc/party and State of the congressman. This column is
   dismembered into the following columns:
-  - `BlocoParl`: only the parlamentary bloc
+  - `BlocoParl`: only the parlamentary bloc. In some commissions, there
+    is not this information.
   - `partido`: only the politician’s party. This column is generated by
     extracting the party names from a dictionary (to access its content,
     see `TodosPartidos`. More information below) from the column
@@ -239,7 +281,7 @@ the code of the commission that we passed in reunion().
     using a dictionary.
 - `complemento`: some complement like “in order”, “off the microphone”,
   “as rapporteur”, “to question by videoconference”, etc.
-- `fala`: the text of the speech.
+- `fala`: the text of the speeches.
 
 <!-- - `reuniao`: número da reunião -->
 <!-- - `data`:  data da reunião da CPI no formato ano-mês-dia -->
@@ -280,31 +322,33 @@ TodosPartidos
 #> [37] "SOLIDARIEDADE" "UNIÃO"         "UP"
 ```
 
-## Step 2b - downloading all meeting files at once
+### Step 2a 2 - downloading all meeting files at once
 
-**The function to download all the meetings and the function to bind
-them is still under development**
+<!-- __The function to download all the meetings and the function to bind them is still under development__ -->
+
+To download all the available files, just use
+`download_all( meetings_dataframe )`
 
 <!-- Simple like this: -->
-<!-- And to bind (rbind) / unite all this files together into a single tibble/dataframe, use: -->
-
-## Getting all meetings (without downloading)
-
-Use the function `get_all_tn()` to obtain a single tibble/dataframe with
-the structured text of all meetings of all days of the commission. In
-the example below, we use just a few lines.
 
 ``` r
-df2606 <- reunioesDF[1:3,] |> get_all_tn()
-#> running 1 of 2
-#> Processando: 8, 1ª PARTE - Depoimento de Mauro Cesar Barbosa Cid, 2ª PARTE - Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/11621"
-#> Cod col: 2606
-#> waiting 3 seconds until the next requisition
-#> running 2 of 2
-#> Processando: 8, 1ª PARTE - Depoimento de Mauro Cesar Barbosa Cid, 2ª PARTE - Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/11621"
-#> Cod col: 2606
-#> waiting 3 seconds until the next requisition
-df2606
+reunioes_slice <- reunioesDF[1:3,] # only the first lines for this example
+download_all( reunioes_slice )
+#> File "/2606/rds/NT_9-Oitiva.Rds" already downloaded.
+#> File "/2606/rds/NT_9-Oitiva.Rds" already downloaded.
+#> File "/2606/rds/NT_8-1_PARTE-Depoimento_de_Mauro_Cesar_Barbosa_Cid_2_PARTE-Deliberativa.Rds" do NOT exists locally. Processing...
+#> Processing cod:2606, meeting: 8, "1ª PARTE - Depoimento de Mauro Cesar Barbosa Cid, 2ª PARTE - Deliberativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/11621"
+#> Waiting 3.5 seconds between the requisitions
+```
+
+And to bind (rbind) / unite all this files together into a single
+tibble/dataframe, use the function `bindAll_TN(code)`:
+
+``` r
+bindAll_TN(2606) # bind all downloaded
+#> /home/alisson/Documentos/Programação/R/notasTaq/2606/rds//NT_8-1_PARTE-Depoimento_de_Mauro_Cesar_Barbosa_Cid_2_PARTE-Deliberativa.Rds/home/alisson/Documentos/Programação/R/notasTaq/2606/rds//NT_9-Oitiva.Rds
+#> /home/alisson/Documentos/Programação/R/notasTaq/2606/rds//NT_8-1_PARTE-Depoimento_de_Mauro_Cesar_Barbosa_Cid_2_PARTE-Deliberativa.Rds
+#> /home/alisson/Documentos/Programação/R/notasTaq/2606/rds//NT_9-Oitiva.Rds
 #> # A tibble: 2,092 × 9
 #>    reuniao data       nome  funcao_blocoPar BlocoParl partido estado complemento
 #>    <chr>   <chr>      <chr> <chr>           <chr>     <chr>   <chr>  <chr>      
@@ -322,6 +366,40 @@ df2606
 #> # ℹ 1 more variable: fala <chr>
 ```
 
+### Step 2b- Getting all meetings (without downloading)
+
+Use the function `get_all_tn()` to obtain a single tibble/dataframe with
+the structured text of all meetings of all days of the commission. In
+the example below, we use just a few lines.
+
+``` r
+df2606 <- reunioesDF[1:3,] |> get_all_tn()
+#> running 1 of 2
+#> Processing cod:2606, meeting: 9, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/11621"
+#> waiting 3 seconds until the next requisition
+#> running 2 of 2
+#> Processing cod:2606, meeting: 8, "1ª PARTE - Depoimento de Mauro Cesar Barbosa Cid, 2ª PARTE - Deliberativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/11621"
+#> waiting 3 seconds until the next requisition
+df2606
+#> # A tibble: 2,092 × 9
+#>    reuniao data       nome  funcao_blocoPar BlocoParl partido estado complemento
+#>    <chr>   <chr>      <chr> <chr>           <chr>     <chr>   <chr>  <chr>      
+#>  1 8       2023-08-01 Arth… PRESIDENTE      (Arthur … UNIÃO   BA     "Fala da P…
+#>  2 8       2023-08-01 MARC… (PL - RO)       (PL - RO) PL      RO     ""         
+#>  3 8       2023-08-01 Arth… PRESIDENTE      (Arthur … UNIÃO   BA     ""         
+#>  4 8       2023-08-01 MARC… (PL - RO)       (PL - RO) PL      RO     ""         
+#>  5 8       2023-08-01 Arth… PRESIDENTE      (Arthur … UNIÃO   BA     ""         
+#>  6 8       2023-08-01 MARC… (PL - RO)       (PL - RO) PL      RO     ""         
+#>  7 8       2023-08-01 Arth… PRESIDENTE      (Arthur … UNIÃO   BA     ""         
+#>  8 8       2023-08-01 MARC… (PL - RO. Pela… (PL - RO… PL      RO     "Pela orde…
+#>  9 8       2023-08-01 Arth… PRESIDENTE      (Arthur … UNIÃO   BA     "Fazendo s…
+#> 10 8       2023-08-01 MARC… (PL - RO)       (PL - RO) PL      RO     ""         
+#> # ℹ 2,082 more rows
+#> # ℹ 1 more variable: fala <chr>
+```
+
+## TL-DR
+
 From beginning to end, if you want to get the full content of, let’s say
 the [commission 2292 (about Fake
 News)](https://legis.senado.leg.br/comissoes/comissao?codcol=2292&data1=2019-08-04&data2=2020-03-20),
@@ -331,100 +409,76 @@ you’ll use the following commands:
 info <- get_info(2292)
 NT2292 <- meetings(info$codcol, info$start_date) |> get_all_tn()
 #> running 1 of 24
-#> Processando: 24, Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9686"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 24, "Deliberativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9686"
 #> waiting 3 seconds until the next requisition
 #> running 2 of 24
-#> Processando: 23, 1ª PARTE - Oitiva, 2ª PARTE - Oitiva, 3ª PARTE - Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9686"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 23, "1ª PARTE - Oitiva, 2ª PARTE - Oitiva, 3ª PARTE - Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9686"
 #> waiting 3 seconds until the next requisition
 #> running 3 of 24
-#> Processando: 22, 1ª PARTE - Oitiva, 2ª PARTE - Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9648"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 22, "1ª PARTE - Oitiva, 2ª PARTE - Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9648"
 #> waiting 3 seconds until the next requisition
 #> running 4 of 24
-#> Processando: 21, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9643"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 21, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9643"
 #> waiting 3 seconds until the next requisition
 #> running 5 of 24
-#> Processando: 20, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9613"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 20, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9613"
 #> waiting 3 seconds until the next requisition
 #> running 6 of 24
-#> Processando: 19, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9612"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 19, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9612"
 #> waiting 3 seconds until the next requisition
 #> running 7 of 24
-#> Processando: 18, Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9572"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 18, "Deliberativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9572"
 #> waiting 3 seconds until the next requisition
 #> running 8 of 24
-#> Processando: 17, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9512"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 17, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9512"
 #> waiting 3 seconds until the next requisition
 #> running 9 of 24
-#> Processando: 16, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9511"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 16, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9511"
 #> waiting 3 seconds until the next requisition
 #> running 10 of 24
-#> Processando: 15, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9472"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 15, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9472"
 #> waiting 3 seconds until the next requisition
 #> running 11 of 24
-#> Processando: 14, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9471"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 14, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9471"
 #> waiting 3 seconds until the next requisition
 #> running 12 of 24
-#> Processando: 13, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9413"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 13, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9413"
 #> waiting 3 seconds until the next requisition
 #> running 13 of 24
-#> Processando: 12, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9412"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 12, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9412"
 #> waiting 3 seconds until the next requisition
 #> running 14 of 24
-#> Processando: 11, Audiência Pública Interativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9379"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 11, "Audiência Pública Interativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9379"
 #> waiting 3 seconds until the next requisition
 #> running 15 of 24
-#> Processando: 10, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9333"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 10, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9333"
 #> waiting 3 seconds until the next requisition
 #> running 16 of 24
-#> Processando: 9, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9320"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 9, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9320"
 #> waiting 3 seconds until the next requisition
 #> running 17 of 24
-#> Processando: 8, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9319"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 8, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9319"
 #> waiting 3 seconds until the next requisition
 #> running 18 of 24
-#> Processando: 7, Oitiva". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9314"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 7, "Oitiva", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9314"
 #> waiting 3 seconds until the next requisition
 #> running 19 of 24
-#> Processando: 6, 1ª PARTE - Deliberativa, 2ª PARTE - Eleição". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9282"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 6, "1ª PARTE - Deliberativa, 2ª PARTE - Eleição", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9282"
 #> waiting 3 seconds until the next requisition
 #> running 20 of 24
-#> Processando: 5, Audiência Pública Interativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9253"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 5, "Audiência Pública Interativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9253"
 #> waiting 3 seconds until the next requisition
 #> running 21 of 24
-#> Processando: 4, Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9139"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 4, "Deliberativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9139"
 #> waiting 3 seconds until the next requisition
 #> running 22 of 24
-#> Processando: 3, Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9094"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 3, "Deliberativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9094"
 #> waiting 3 seconds until the next requisition
 #> running 23 of 24
-#> Processando: 2, Deliberativa". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9046"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 2, "Deliberativa", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9046"
 #> waiting 3 seconds until the next requisition
 #> running 24 of 24
-#> Processando: 1, Instalação e Eleição". Analisando url: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9005"
-#> Cod col: 2292
+#> Processing cod:2292, meeting: 1, "Instalação e Eleição", from the URL: "http://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/9005"
 #> waiting 3 seconds until the next requisition
 
 str(NT2292)
@@ -438,7 +492,6 @@ str(NT2292)
 #>  $ estado         : chr [1:12032] "PR" NA "PR" "SC" ...
 #>  $ complemento    : chr [1:12032] "" "(Para depor" "" "Pela ordem" ...
 #>  $ fala           : chr [1:12032] "Havendo número regimental, declaro aberta a 23ª Reunião da Comissão Parlamentar Mista de Inquérito, criada pelo"| __truncated__ "Boa tarde a todos. É uma satisfação de verdade estar aqui, Presidente, nessa CPMI, que está prestando um excele"| __truncated__ "Obrigado pela sua disposição de comparecer à CPI.       13:12   R      Aguardando o Relator, que fará os seus q"| __truncated__ "Presidente, antes, eu gostaria de saber se o autor do requerimento vai... O autor do requerimento é o Deputado."| __truncated__ ...
-#>  - attr(*, "cod")= num 2292
 ```
 
 ## Advice
@@ -449,10 +502,12 @@ capture what we don’t want or fail to capture what we wanted.
 
 <!-- For example, checking the party column:  -->
 
-The column with names (called `nomes`) is probably where we can find
-more mistakes. The same person can have their name written in different
-ways, with and without accents, sometimes with different surnames. So
-it’s essential to always check the names before you make your analysis.
+But this not the only source of problems: the data source can come with
+different pattern, causing problems in parsing. The column with names
+(called `nomes`) is where we can find probably thsi kind of mistakes.
+The same person can have their name written in different ways, with and
+without accents, sometimes with different surnames. So it’s essential to
+always check the names before you make your analysis.
 
 ``` r
 participantes <- NT2292 |> dplyr::pull(nome) 
@@ -575,16 +630,17 @@ In this example, we can see
   HASSELMANN” and “JOICE HASSELMANN”
 
 <!-- participantes |> toupper() |> plyr::count() |> dplyr::arrange(-freq) -->
-
-**…to be continued**
+<!-- __...to be continued__ -->
 
 ## Apendix
 
-- To get speeches of brazilian deputies, take a look at the package
+- To get the speeches of brazilian deputies, take a look at the package
   [speechbr](https://github.com/cran/speechbr).
-- To know how a parliamentary inquiry committee works, [look
+- To understand how a parliamentary inquiry committee works, [look
   here](https://www.camara.leg.br/noticias/956283-o-que-e-e-como-funciona-uma-comissao-parlamentar-de-inquerito/)
+  (in portuguese), and a complete list of all commissions in Senate
+  [here](https://legis.senado.leg.br/comissoes/pesquisa_comissao?casa=sf,cn&tipo=cpi&sit=func,aguard,encerr).
 - See a simple example of text analysis of this kind of transcription,
-  but not using the package notasTaq
+  but not using the package notasTaq,
   [here](https://soaresalisson.github.io/analisetextual/exemplo-an%C3%A1lise---dados-da-cpi-da-pandemia.html)
   (in portuguese).

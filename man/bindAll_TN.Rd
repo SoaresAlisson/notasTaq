@@ -4,9 +4,9 @@
 \alias{bindAll_TN}
 \title{bindAll_TN}
 \usage{
-bindAll_TN()
+bindAll_TN(cod)
 }
 \description{
-bind (rbind) / unite all downloades dataframes in the /code/rds folder
+bind (rbind) / unite all downloaded dataframes in the /code/rds folder
 into a single tibble/dataframe.
 }
