@@ -11,15 +11,25 @@
 #' @export
 get_info <- function(cod){
 
-  page <- paste0("https://legis.senado.leg.br/comissoes/comissao?codcol=", cod)  |> rvest::read_html()
+  URL_base <- c("https://legis.senado.leg.br/atividade/comissoes/comissao/", 
+    "https://legis.senado.leg.br/comissoes/comissao?codcol=")[2]
 
-  title <-  page |> rvest::html_elements(".white") |> rvest::html_text2()
-  description <- page |> rvest::html_elements(".color-cpi, .color-cpmi, .color-mpv") |> rvest::html_text2()
+  page <- paste0(URL_base, cod)  |> 
+    rvest::read_html()
 
-  finalidadeVec <- page |> rvest::html_elements("p:contains('Finalidade')") |> rvest::html_text2() |> strsplit("\\n") |> unlist()
+  title <- page |> rvest::html_elements(".white") |> rvest::html_text2( )
+
+  description <- page |> 
+    rvest::html_elements(".color-cpi, .color-cpmi, .color-mpv") |> 
+    rvest::html_text2()
+
+  finalidadeVec <- page |> rvest::html_elements("p:contains('Finalidade')") |> 
+    rvest::html_text2() |> strsplit("\\n") |> unlist()
 
   indicefinalidade <- which(grepl("Finalidade", finalidadeVec, ignore.case=T))
+
   finalidade <- finalidadeVec[indicefinalidade + 1]
+
   start_date <- grep("instala", finalidadeVec,  ignore.case = TRUE, value = TRUE) |>  stringr::str_extract_all("[\\d\\/]+") |>  unlist() |> as.Date(format =  "%d/%m/%Y")
 
   list(codcol = cod,

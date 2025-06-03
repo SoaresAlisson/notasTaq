@@ -1,0 +1,173 @@
+
+```{r ll}
+sto::ll("sto dplyr rvest")
+```
+```{r URL}
+URL <- "https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611"
+parser(URL)
+```
+```{r read html}
+NT_html <- list.files("inst/extdata/", full.names=T) |> 
+  read_html(encoding = "utf8")
+```
+```{r html_elem}
+title <- NT_html |> html_elements("h1") |> html_text() |> grep("\\d+/\\d+", x=_, value = TRUE)
+```
+```{r }
+NT_html |> 
+  html_elements("#content") |>
+  # html_elements(".justificado") |> 
+  html_elements("b") |> 
+  html_text()
+
+  # texto <- NT_html |> rvest::html_nodes('.escriba-jq') |> rvest::html_text()
+  texto <- NT_html |> rvest::html_elements(".justificado") |> rvest::html_text()
+  alerta <- NT_html |> rvest::html_element('.alert') |> rvest::html_text()
+
+  texto |> grep2("^([A] SR)", ic=F)
+  texto[1] |> substr(1, 500)
+ 
+ # breaking the text into vector elements at every "O SR|A SRA"
+ ## method 1
+  texto_vetores0 <- texto |> 
+    # paste(collapse = " ") |> 
+    gsub('[0-9]{2}\\:[0-9]{2}  R|\\(Pausa\\.\\)', '', )  |>
+      gsub('(O SR|A SRA)\\.', 'ZZZVECTOR_\\1\\.', .)  |>
+    strsplit(. , "ZZZVECTOR_")  |> 
+    unlist()
+## method 2
+# Function to concatenate elements that do not start with "O SR|A SRA"
+  collapse_non_sr <- function(vec) {
+    vec %>%
+    purrr::keep(~ !stringr::str_detect(., "^O SR|A SRA")) %>%
+      paste(collapse = " ")
+  }
+
+# Apply the function
+  collapse_non_sr(texto_vetores0) |> length()
+
+ ## method 3
+DF <-   tibble::tibble(txt = texto) |> 
+    mutate(
+      inic_frase = grepl(x = texto, "^(O SR|A SRA| A SRa)\\b") 
+    )
+  DF |> 
+  group_by(group =  cumsum(inic_frase)) |> 
+  summarise(txt  = paste(txt, collapse = " ")) |> 
+      mutate(
+      in_middle = grepl(x=texto, ".+(O SR|A SRA|A SRa)\\b" )
+  )
+  # TODO
+    # mutate(
+      # txt = ifelse(!inic_frase, paste( collapse) )
+    # txt = ifelse(in_middle, tidyr::pivot_longer(txt, cols =  ) )
+    # txt = ifelse(in_middle,  ) ))
+
+
+# TODO new lines only when begin with <b>
+
+  # limpando a linha 1, se ela contiver o indesejável texto abaixo (sempre vem)
+  reuniao <- texto_vetores0[1] %>% gsub(".* ([0-9]+)ª.*", "\\1",.)
+  regex.1linha <- "\n\n+.*@import.*Texto com revisão +"
+
+  if (grepl(regex.1linha, texto_vetores0[1])){
+    texto_vetores = texto_vetores0[-1]
+  } else {
+    texto_vetores = texto_vetores0
+  }
+
+
+  ExpReg <- '(O SR|A SRA)\\. ([A-ZÀ-Ÿ \\.]+)(\\(.*?\\)| ?)([-   ––]{3})(.*)'
+  vetor_nomes <- unlist(str_extract_all(texto_vetores, ExpReg))
+  nome <- gsub(ExpReg,'\\2', texto_vetores) %>% gsub(' $','',.)
+  # unique(nome)
+  funcao_bloco = gsub(ExpReg,'\\3', texto_vetores)
+  fala <- gsub(ExpReg,'\\5', texto_vetores)
+```
+```{r fun from_html_2_df}
+fun from_html_2_df <- function(html_page) {
+
+  title <- NT_html |> html_elements("h1") |> 
+    html_text() |> grep("\\d+/\\d+", x=_, value = TRUE)
+
+  texto <- NT_html |> rvest::html_elements(".justificado") |> rvest::html_text()
+  # alerta <- NT_html %>% rvest::html_element('.alert') %>% rvest::html_text()
+ 
+ # breaking the text into vector elements at every "O SR|A SRA"
+ ## method 1
+  texto_vetores0 <- texto |> 
+    # paste(collapse = " ") |> 
+    gsub('[0-9]{2}\\:[0-9]{2}  R|\\(Pausa\\.\\)', '', )  |>
+      gsub('(O SR|A SRA)\\.', 'ZZZVECTOR_\\1\\.', .)  |>
+    strsplit(. , "ZZZVECTOR_")  |> 
+    unlist()
+}
+
+
+```
+```{r test break}
+NT_html <- list.files("inst/extdata/", full.names=T) |> readLines()
+tempFile <- tempfile()
+
+NT_html |> 
+  gsub(x=_, "(<b>)", "<break_line>\\1") |> 
+  writeLines( tempFile)
+
+tempFile |> #read_html(encoding = "utf8")
+  read_html(encoding = "utf8") |>
+  html_elements("break_line") |>
+  html_text()
+  # html_attrs(".break_line")
+
+NT_html |> 
+  gsub(x=_, "(<b>)", "<break_line>\\1") |>
+  paste(collapse = " ") |>
+  xml2::read_html(encoding = "utf8") |>
+  html_elements("break_line") |>
+  html_text()
+
+
+NT_html
+```
+```{r fun from_html_2_df}
+from_html_2_df <- function(html_page) {
+# html_page = NT_html 
+
+  text <- html_page |> 
+  # NT_html |> 
+    as.character() |>
+    gsub(x=_, "(<b>)", "<break_line>\\1") |>
+    paste(collapse = " ") |>
+    xml2::read_html(encoding = "utf8") |>
+    html_elements("break_line") |>
+    html_text()
+
+  # transform data type of input
+  if (typeof(html_page) == "character") {
+    html_page <- xml2::read_html(
+      paste(html_page, collapse = " "), 
+      encoding = "utf8")
+  }
+
+  title <- html_page |> 
+    # NT_html |> 
+      html_elements("h1") |> 
+      html_text() |> 
+      grep("\\d+/\\d+", x=_, value = TRUE)
+
+  tibble(title, text)
+ 
+}
+
+NT_html <- list.files("inst/extdata/", full.names=T) |> readLines()
+from_html_2_df(NT_html)
+NT_html <- list.files("inst/extdata/", full.names=T) |> read_html(encoding = "utf8")
+from_html_2_df(NT_html)
+NT_html |> typeof()
+NT_html |> class()
+```
+```{r parser}
+scraped_page |> parser()
+```
+
+

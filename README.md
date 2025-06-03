@@ -40,8 +40,8 @@ The basic operation of the {notasTaq} package takes pure text like this
 <figure>
 <img src="./readme_data/rstudio_nt2441.69_site.png"
 alt="Example of Senate’s tacquigraphic notes" />
-<figcaption aria-hidden="true">Example of Senate’s tacquigraphic
-notes</figcaption>
+<figcaption aria-hidden="true"><em>Example of Senate’s tacquigraphic
+notes</em></figcaption>
 </figure>
 
 And transforms into this:
@@ -49,8 +49,8 @@ And transforms into this:
 <figure>
 <img src="./readme_data/rstudio_nt2441.69.png"
 alt="Example of a dataframe generated with {notasTaq}" />
-<figcaption aria-hidden="true">Example of a dataframe generated with
-{notasTaq}</figcaption>
+<figcaption aria-hidden="true"><em>Example of a dataframe generated with
+{notasTaq}</em></figcaption>
 </figure>
 
 If you want to check out a file, see this [csv of the commission about
@@ -218,11 +218,6 @@ computer with the name of “codcol,” and inside it, two other folders:
 `csv` and `rds`. If you have already run this function before, it will
 return `NULL`. Try 1) choosing another line number, or 2) deleting the
 file in the /rds folder.
-
-``` r
-nt <- parser(reunioesDF, 1, save = TRUE)
-str( nt )
-```
 
 ``` r
 nt <- parser(reunioesDF, 1, save = TRUE)

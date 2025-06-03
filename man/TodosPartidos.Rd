@@ -5,7 +5,7 @@
 \alias{TodosPartidos}
 \title{Parser de notas taquigráficas do Senado}
 \format{
-An object of class \code{character} of length 39.
+An object of class \code{character} of length 43.
 }
 \usage{
 TodosPartidos

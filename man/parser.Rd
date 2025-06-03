@@ -14,7 +14,7 @@ parser(DF, linha, save = FALSE)
 \item{save}{= FALSE (default). To save the files in .rds and .csv.}
 }
 \description{
-turns the pure text of the tacquigraphic notes, into
+turns the pure html text of the tacquigraphic notes, into
 an structured tibble/ data.frame, and saves it in .rds and .csv
 }
 \examples{

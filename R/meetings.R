@@ -1,4 +1,8 @@
-#' return a tibble(data.frame) with information about the reunions
+# listar comissoes
+# https://www.congressonacional.leg.br/dados/docs/resource_ListaComissaoService.html#resource_ListaComissaoService_listaComissoesXml_GET
+# https://legis.senado.leg.br/dadosabertos/dados/ConselhosOrgaosCongresso.xml
+
+#' return a tibble(data.frame) with information about the reunions/meetings
 #'
 #' it read the page of the specified comission and return a tibble with many
 #' information, like: date, number of reunion, description, links
@@ -23,7 +27,8 @@ meetings <- function(cod, start, end = Sys.Date() ){
     cod <- stringr::str_replace(cod , ".*codcol=(\\d+).*", "\\1")
   }
 
-  url <- paste0("https://legis.senado.leg.br/comissoes/comissao?codcol=", cod, "&data1=", start, "&data2=", end )
+  url <- paste0("https://legis.senado.leg.br/comissoes/comissao?codcol=", 
+    cod, "&data1=", start, "&data2=", end )
 
   reunioes <- rvest::read_html(url)
 
