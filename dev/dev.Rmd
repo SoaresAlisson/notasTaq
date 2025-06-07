@@ -1,9 +1,11 @@
+https://legis.senado.leg.br/dadosabertos/api-docs/swagger-ui/index.html#/Comiss%C3%A3o/detalhesColegiado
 
 ```{r ll}
 sto::ll("sto dplyr rvest")
 ```
 ```{r URL}
 URL <- "https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611"
+options(browser = "firefox")
 parser(URL)
 ```
 ```{r read html}
@@ -170,4 +172,68 @@ NT_html |> class()
 scraped_page |> parser()
 ```
 
+## comissoes
 
+```{r }
+codigo <- "449"
+baseURL <- "https://legis.senado.leg.br/dadosabertos/"
+URL  <- paste0(baseURL, "comissao/", codigo)
+
+http <- httr::GET(URL)
+
+http$request
+http$headers
+content <- http$content |> rawToChar() |> jsonlite::fromJSON()
+
+content$ComissoesCongressoNacional |> 
+  listviewer::jsonedit()
+
+content$ComissoesCongressoNacional$Metadados
+content$ComissoesCongressoNacional$noNamespaceSchemaLocation
+
+content$ComissoesCongressoNacional$Colegiados |> 
+  # str()
+  dplyr::bind_rows()
+```
+
+/dadosabertos/comissao/agenda/{dataInicio}/{dataFim}
+
+/dadosabertos/comissao/reuniao/{codigoReuniao}
+
+### notas
+/dadosabertos/comissao/reuniao/notas/{codigoReuniao}
+```{r notas}
+URL <- paste0(baseURL, "comissao/reuniao/notas/", codigo)
+
+```
+
+## Partidos
+"Obtém a lista dos Partidos Políticos em atividade e/ou extintos no Senado Federal"
+```{r }
+"/dadosabertos/composicao/lista/partidos"
+URL <- paste0(baseURL, "composicao/lista/partidos")
+http <- httr::GET(URL)
+
+partidos <- http$content |> rawToChar() |> jsonlite::fromJSON()  #|> dplyr::bind_rows()
+
+partidos |> listviewer::jsonedit()
+
+partidos$ListaPartidos$Partidos[[1]]|> tibble::as_tibble()
+
+partidos$ListaPartidos$Partidos[[1]]|> tibble::as_tibble() |> 
+  dplyr::filter(DataExtincao == "NA")
+
+## transforming code above into function
+# get_parties <- function() {  
+#     URL <- paste0(baseURL, "composicao/lista/partidos")
+#     http <- httr::GET(URL)
+#
+#     partidos <- http$content |> rawToChar() |> jsonlite::fromJSON()  #|> dplyr::bind_rows()
+#
+#     partidos |> listviewer::jsonedit()
+#
+#     partidos$ListaPartidos$Partidos  |> tibble::as_tibble()
+# }
+#
+# get_parties()
+```
