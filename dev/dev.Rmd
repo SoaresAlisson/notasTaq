@@ -2,10 +2,10 @@ https://legis.senado.leg.br/dadosabertos/api-docs/swagger-ui/index.html#/Comiss%
 
 ```{r ll}
 sto::ll("sto dplyr rvest")
+options(browser = "firefox")
 ```
 ```{r URL}
 URL <- "https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611"
-options(browser = "firefox")
 parser(URL)
 ```
 ```{r read html}
@@ -171,8 +171,18 @@ NT_html |> class()
 ```{r parser}
 scraped_page |> parser()
 ```
+```{r }
+URL <- "https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611"
+pagina <- rvest::read_html(URL)
+class(pagina)
+typeof(pagina)
+html_page <- pagina
+rm(html_page)
+parse(html_page)
+parse(URL)
+```
 
-## comissoes
+## comissões
 
 ```{r }
 codigo <- "449"
@@ -203,13 +213,20 @@ content$ComissoesCongressoNacional$Colegiados |>
 ### notas
 /dadosabertos/comissao/reuniao/notas/{codigoReuniao}
 ```{r notas}
+codigo <- 13219
 URL <- paste0(baseURL, "comissao/reuniao/notas/", codigo)
+http <- httr::GET(URL)
+content <- http$content |> rawToChar() |> jsonlite::fromJSON()
+
+page <- content$NotasTaquigraficasReuniao$UrlNotasTaquigraficas |> rvest::read_html()
+page |> extract_metadata()
+
 
 ```
 
 ## Partidos
 "Obtém a lista dos Partidos Políticos em atividade e/ou extintos no Senado Federal"
-```{r }
+```{r partidos}
 "/dadosabertos/composicao/lista/partidos"
 URL <- paste0(baseURL, "composicao/lista/partidos")
 http <- httr::GET(URL)

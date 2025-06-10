@@ -1,0 +1,31 @@
+/dadosabertos/comissao/agenda/mes/{mesReferencia}
+
+```{r }
+ano_mes <- "202412"
+versao = "2"
+
+# https://legis.senado.leg.br/dadosabertos/comissao/agenda/mes/202412?v=2
+URL <- paste0(baseURL, "comissao/agenda/mes/", ano_mes, "?v=", versao)
+http <- httr::GET(URL)
+
+content <- http$content |> rawToChar() |> jsonlite::fromJSON()
+content$AgendaReuniao
+content$AgendaReuniao$noNamespaceSchemaLocation
+content$AgendaReuniao$Metadados
+
+DF <- content$AgendaReuniao$reunioes |> 
+  dplyr::bind_rows() |> 
+  tibble::as_tibble() |> 
+  dplyr::mutate(versao = as.Date(versao))
+
+DF |> gt::gt()
+DF$versao
+DF$descricao
+DF$titulo
+DF$tipo
+DF$
+
+
+DF$partes |>  dplyr::bind_rows() |> tibble::as_tibble()
+```
+

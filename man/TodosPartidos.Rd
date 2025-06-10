@@ -3,7 +3,7 @@
 \docType{data}
 \name{TodosPartidos}
 \alias{TodosPartidos}
-\title{Parser de notas taquigráficas do Senado}
+\title{Parser de notas taquigráficas do Senado DEPRECATED?}
 \format{
 An object of class \code{character} of length 43.
 }
@@ -15,7 +15,8 @@ All brazilian parties
 }
 \details{
 The names of parties used to extract the data of the column "partido"
-Estes nomes serão usados para construir a coluna "partido"
+Estes nomes serão usados para construir a coluna "partido".
+DEPRECATED. Use \code{get_parties} instead.
 }
 \examples{
 TodosPartidos

@@ -1,3 +1,6 @@
+baseURL <- "https://legis.senado.leg.br/dadosabertos/"
+
+
 library(testthat)
 library(httr)
 library(tibble)

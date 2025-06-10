@@ -2,7 +2,7 @@
 % Please edit documentation in R/parser.R
 \name{parser}
 \alias{parser}
-\title{parse the tacquigraphic notes text}
+\title{Parse the tacquigraphic notes text}
 \usage{
 parser(DF, linha, save = FALSE)
 }
