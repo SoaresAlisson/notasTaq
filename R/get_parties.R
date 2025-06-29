@@ -8,7 +8,9 @@
 #' @export
 #' @examples
 #' get_parties()
-get_parties <- function() {  
+get_parties <- function() { 
+  baseURL <- "https://legis.senado.leg.br/dadosabertos/" # TODO. usar somente um baseURL geral
+
     URL <- paste0(baseURL, "composicao/lista/partidos")
     http <- httr::GET(URL)
 

@@ -7,20 +7,22 @@
 #' it read the page of the specified comission and return a tibble with many
 #' information, like: date, number of reunion, description, links
 #'
-# url = "https://legis.senado.leg.br/comissoes/comissao?codcol=2606&data1=2023-05-25&data2=2023-08-12"
 #' @param cod The code of the reunion
-#' @param start The start date. When the comission was created
-#' @param end (optional) The end date. If no parameter is given, it uses the
+#' @param start_date The start date. When the comission was created
+#' @param end_date (optional) The end date. If no parameter is given, it uses the
 #' actual date, given by Sys.Date()
 #'
 #' @examples
-#' reunions(cod = "2606", start = "2023-05-25")
-#' reunions(cod = "2606", start = "2023-05-25", end ="2023-08-12")
-#' reunions("https://legis.senado.leg.br/comissoes/comissao?codcol=2602", start = "2023-02-02")
+#' reunions(cod = "2606", start_date = "2023-05-25")
+#' reunions(cod = "2606", start_date = "2023-05-25", end_date ="2023-08-12")
+#' reunions("https://legis.senado.leg.br/comissoes/comissao?codcol=2602", start_date = "2023-02-02")
 #'
 #' @export
-meetings <- function(cod, start, end = Sys.Date() ){
-   library(stringr, quietly = T )
+meetings <- function(cod, start_date, end_date = Sys.Date() ){
+  # https://legis.senado.leg.br/dadosabertos/api-docs/swagger-ui/index.html#/Comiss%C3%A3o/listaColegiadosSFPorTipo
+# url = "https://legis.senado.leg.br/comissoes/comissao?codcol=2606&data1=2023-05-25&data2=2023-08-12"
+  # cod = "2606"; start_date = "2023-05-25"; end_date = "2023-08-12"
+
 
     # extract the code if the code provided is not only numbers
   if (!stringr::str_detect(cod, "^\\d+$") ) {
@@ -28,7 +30,7 @@ meetings <- function(cod, start, end = Sys.Date() ){
   }
 
   url <- paste0("https://legis.senado.leg.br/comissoes/comissao?codcol=", 
-    cod, "&data1=", start, "&data2=", end )
+    cod, "&data1=", start_date, "&data2=", end_date )
 
   reunioes <- rvest::read_html(url)
 
@@ -37,7 +39,8 @@ meetings <- function(cod, start, end = Sys.Date() ){
   #   message(paste("Sugested begin data: ", as.character(data_start) ))
   # }
 
-  reunioes.vetor <- reunioes %>% rvest::html_elements('.row:nth-child(2) .content .col-md-12')
+#  reunioes.vetor <- reunioes %>% rvest::html_elements('.row:nth-child(2) .content .col-md-12')
+  reunioes.vetor <- reunioes |> rvest::html_elements('#reunioesAgendaComissao')
 
   datas.vetor <- reunioes.vetor  %>% rvest::html_element('a:nth-child(1) span:nth-child(1)') %>% rvest::html_text() %>%
     grep("^$", .,value=T, invert = T) %>%
@@ -58,4 +61,9 @@ meetings <- function(cod, start, end = Sys.Date() ){
 
  reunDF
 }
+
+meetings
+'https://legis.senado.leg.br/dadosabertos/comissao/reuniao/notas/13219?v=1'
+"/dadosabertos/comissao/reuniao/{codigoReuniao}"
+'/dadosabertos/comissao/reuniao/notas/{codigoReuniao}'
 

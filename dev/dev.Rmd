@@ -1,8 +1,29 @@
 https://legis.senado.leg.br/dadosabertos/api-docs/swagger-ui/index.html#/Comiss%C3%A3o/detalhesColegiado
 
+## intro
+
 ```{r ll}
 sto::ll("sto dplyr rvest")
 options(browser = "firefox")
+detach("package:notasTaq", unload = TRUE)
+ls("package:notasTaq")
+```
+```{r build things}
+devtools::build_readme() # locates your README.Rmd and builds it into a README.md
+devtools::build_manual() # Create package pdf manual
+
+devtools::clean_vignettes()
+devtools::build_vignettes(pkg = ".")
+devtools::build_vignettes("vignettes")
+devtools::build_vignettes("vignettes/codifing.Rmd")
+usethis::use_github()
+usethis::use_github_links() #  If a package is already connected to a remote GitHub repository, usethis::use_github_links() can be called to just add the relevant links to DESCRIPTION.'use_github_links()'
+# usethis::use_data_table() # creates all the boilerplate. https://usethis.r-lib.org/reference/use_data_table.html
+# usethis::use_pkgdown() # is a function you run once and it does the initial, minimal setup necessary to start using pkgdown:
+
+# devtools::build_articles() # Create package pdf manual
+pkgdown::build_site_github_pages()
+
 ```
 ```{r URL}
 URL <- "https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611"
@@ -181,9 +202,117 @@ rm(html_page)
 parse(html_page)
 parse(URL)
 ```
+```{r new parse}
 
+parse_NT <- function(html_page, save_as) {
+  # html_page <- NT_html
+  # html_page <- URL
+
+  if (any(class(html_page) %in% "xml_document" )){
+      DF <- extract_metadata(html_page)
+  } else{ 
+      DF <- html_page |> 
+        rvest::read_html() |>
+        extract_metadata()
+  }
+  # save_as
+  if ( exists("save_as") ){
+      DF
+  } else {
+      save_csv_rds(DF, save_as)
+  }
+
+  return(DF)
+}
+
+rm(parse_NT)
+file_html <- list.files("inst/extdata/", full.names=TRUE)
+NT_html <- xml2::read_html(file_html,encoding = "utf8")
+parse_NT(NT_html)
+
+URL <- "https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611"
+parse_NT(URL)
+
+```
+```{r fun extract metadata}
+dir_exs <- "./inst/extdata/"
+file_name <- paste0(dir_exs, "NT_13219.html")
+
+# download.file(URL, file_name)
+DF <- rvest::read_html(file_name, encoding = "utf8") 
+DF <- from_html_2_df(DF)
+
+rgx_date <- "\\d+\\/\\d+\\/\\d+"
+rgx_date <- "\\d+/\\d+/\\d+"
+rgx_date <- "(\\d+/){2}\\d+"
+DF$Title |> stringr::str_extract( rgx_date) #|> as.vector(),
+# DF2 <- 
+DF |> #dplyr::select(text) |> 
+    dplyr::mutate(
+      Date = stringr::str_extract(Title, rgx_date) |> as.Date("%d/%m/%Y"), 
+      Title = stringr::str_remove(Title, rgx_date),
+      # reunion_n = stringr::str_replace(Titre, ".* - (\\d+) - .*", "\\1"),
+      reunion_n = Title |> 
+        strsplit("-") |> unlist() |> 
+        grep("\\d+", x=_, value = TRUE) |> 
+        stringr::str_trim(), 
+    # stringr::str_replace(, ".* - (\\d+) - .*", "\\1"),
+      Title =  Title |> 
+        strsplit("-") |> 
+        unlist() |>
+        dplyr::nth(3) |> 
+        stringr::str_trim(),
+      metadata = text |> 
+        substring(1,300) |> 
+        # stringr::str_extract_all( rgx_metaData, simplify = TRUE) |>
+        stringr::str_extract_all( ".*\\)", simplify = TRUE) |> 
+        as.vector(),
+        # gsub(x=_, "(.*\\)).*", "\\1"),
+      # if metadata is empty, because text pattern does not has ), then new rule to extract
+      metadata = ifelse(metadata == "", 
+        text |> 
+          substring(1,300) |> 
+          stringr::str_extract_all( ".* \\W ", simplify = TRUE) ,
+        metadata),
+      gentilic = metadata |>
+        substring(1,10) |> 
+        stringr::str_extract_all( "([sSdD][Rr][aA]?)", simplify = TRUE) |> 
+        as.vector() ,
+        # gsub(x=_, ".*([sSdD][Rr][aA]?).*", "\\1") ,
+      # checar se contem SR SRA, if not, return empty
+        # gentilic = ifelse(
+        #   grepl("[sSdD][Rr][aA]?", gentilic), 
+        # gentilic,""),
+      speaker = metadata |>
+        gsub(x=_,"^[OAoa] [SsRr]{2}[aA]?[\\. ]+","") |> # erase "O SR" at the beginning
+        gsub(x=_," \\W $","") |> # erase " - " at the end
+        # gsub(x=_," - $","") |> # erase "O SR" at the beginning
+        gsub(x=_, " +\\(.*", "")  |> 
+        trimws(),
+      metadata2 = metadata |> # metadata inside parenthesis, e.g,: "("Dr. Hiran. Bloco Parlamentar Aliança/PP - RR)"
+        stringr::str_extract_all("\\(.*\\)", simplify = TRUE) |>
+         # stringr::str_remove_all( "\\\\(")
+        # gsub(x=_, r"([\(\)])", ""),
+        stringr::str_remove_all( 
+          # r"([\(\)])",
+          "\\(|\\)"),
+      party_UF = metadata2 |>
+        stringr::str_extract_all("\\W\\w+ \\W [A-Z]{2}", simplify = TRUE) |>
+        stringr::str_remove_all("\\/"), 
+        # gsub(x=_,"\\/", ""),
+      party = party_UF |> 
+        gsub(x=_, "(\\w*)[\\W -]+.*[A-Z]{2}", "\\1" ),
+      state =  party_UF |> 
+        gsub(x=_, "(\\w*)[\\W -]+.*([A-Z]{2})", "\\2"),
+      # complement = TODO 
+      block = metadata2 |> 
+        # gsub(x=_, "^([A-Za-z ]+)[\\/\\-].*", "\\1")
+        gsub(x=_, "^(.*)\\/.*", "\\1")
+  ) |> dplyr::select(-gentilic, -text) #
 ## comissões
-
+DF2|> dplyr::count(party_UF)
+DF2
+```
 ```{r }
 codigo <- "449"
 baseURL <- "https://legis.senado.leg.br/dadosabertos/"
@@ -253,4 +382,37 @@ partidos$ListaPartidos$Partidos[[1]]|> tibble::as_tibble() |>
 # }
 #
 # get_parties()
+```
+
+## outros / confusao / shuffle / adhoc
+
+```{r }
+dir_exs <- "./inst/extdata/"
+file_name <- paste0(dir_exs, "NT_13219.html")
+
+# download.file(URL, file_name)
+pagina <- rvest::read_html(file_name, encoding = "utf8") |> 
+  parse_TN()
+
+pagina
+```
+```{r }
+DF |> # dplyr::select(text) |> 
+    dplyr::mutate(
+      metadata = text |> 
+        substring(1,300) |>
+      gsub(x=_, "(.*\\)).*", "\\1")
+)
+```
+```{r }
+
+s_extract <- function(txt, pattern) {
+  txt |> 
+    gsub(x=_,
+        # paste0("(", pattern ,").*"),
+        paste0("(.*)(", pattern, ")(.*)"),
+      "\\2")
+}
+
+"O SR. PRESIDENTE (Jorge Kajuru. Bloco Parlamentar da Resistência Democrática/PSB - GO) - Eu quero apenas, aproveitando a pergunta do Senador Eduardo Girão, nosso Vice-Presidente, como a ideia foi minha, em uma entrevista na Rede TV com o Presidente Lula, em que ele concordou plenamente, o que ele colocou para o Brasil inteiro é que ele vai propor, através de decreto-lei, que essas apostas tenham as seguintes proibições: em cartão amarelo, em cartão vermelho, em arremesso manual, em escanteio, em gols, em pênaltis. Que somente possam as empresas legalizadas - que já estão, aliás, algumas delas -, que apenas possa se apostar no resultado do jogo. Perfeito? Então, apenas fazendo aqui esta observação. " |> s_extract(".*\\)")
 ```

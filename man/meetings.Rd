@@ -4,14 +4,14 @@
 \alias{meetings}
 \title{return a tibble(data.frame) with information about the reunions/meetings}
 \usage{
-meetings(cod, start, end = Sys.Date())
+meetings(cod, start_date, end_date = Sys.Date())
 }
 \arguments{
 \item{cod}{The code of the reunion}
 
-\item{start}{The start date. When the comission was created}
+\item{start_date}{The start date. When the comission was created}
 
-\item{end}{(optional) The end date. If no parameter is given, it uses the
+\item{end_date}{(optional) The end date. If no parameter is given, it uses the
 actual date, given by Sys.Date()}
 }
 \description{
@@ -19,8 +19,8 @@ it read the page of the specified comission and return a tibble with many
 information, like: date, number of reunion, description, links
 }
 \examples{
-reunions(cod = "2606", start = "2023-05-25")
-reunions(cod = "2606", start = "2023-05-25", end ="2023-08-12")
-reunions("https://legis.senado.leg.br/comissoes/comissao?codcol=2602", start = "2023-02-02")
+reunions(cod = "2606", start_date = "2023-05-25")
+reunions(cod = "2606", start_date = "2023-05-25", end_date ="2023-08-12")
+reunions("https://legis.senado.leg.br/comissoes/comissao?codcol=2602", start_date = "2023-02-02")
 
 }
