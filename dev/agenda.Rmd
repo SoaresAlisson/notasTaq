@@ -1,6 +1,6 @@
 /dadosabertos/comissao/agenda/mes/{mesReferencia}
 
-```{r borwoser}
+```{r browser}
 options(browser="firefox")
 ```
 
@@ -114,4 +114,46 @@ paste0("https://legis.senado.leg.br/",
   ) |> #urltools::url_encode() |> 
   browseURL()
 
+```
+
+## mesReferencia
+/dadosabertos/comissao/agenda/mes/{mesReferencia}
+```{r mesReferencia}
+mesReferencia <- 202412
+
+paste0("https://legis.senado.leg.br/",
+    "dadosabertos/",
+    "comissao/agenda/mes/", 
+  mesReferencia,
+  "?v=2") |> #urltools::url_encode() |> 
+  browseURL()
+```
+I have this API call. Transform it into httr2 in R 
+
+curl -X 'GET' \
+  'https://legis.senado.leg.br/dadosabertos/comissao/agenda/mes/202412?v=2' \
+  -H 'accept: text/csv'
+
+```{r }
+ano_mes <- 202412
+
+search_agenda <- paste0("https://legis.senado.leg.br/dadosabertos/comissao/agenda/mes/", 
+  ano_mes, "?v=2") |> 
+  httr2::request() |>
+  httr2::req_method("GET") |>
+  # httr2::req_headers(accept = "text/csv") |> # too slow or doesnt works
+  httr2::req_headers(accept = "application/json") |>
+  httr2::req_perform()
+
+body <- search_agenda$body |> rawToChar() |> jsonlite::fromJSON()
+
+DF <- body$AgendaReuniao$reunioes[[1]] |> tibble::as_tibble()
+
+knitr::kable(DF, format = "html")
+DT::datatable(DF)
+DF |> dplyr::count(descricao, sort=TRUE) 
+
+DF$descricao[9]
+DF$dataReuniao
+DF$informacao
 ```

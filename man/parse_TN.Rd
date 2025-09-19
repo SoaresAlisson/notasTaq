@@ -9,15 +9,16 @@ parse_TN(html_page, save_as)
 \arguments{
 \item{html_page}{the dataframe generated with meetings()}
 
-\item{save_as}{To save the files in .rds and .csv. If empty, the files will not be saved.}
+\item{save_as}{To save the files in .rds and .csv. If empty, the files
+will not be saved.}
 }
 \description{
-turns the pure .html text of the tacquigraphic notes, into an structured
+Turns the pure .html text of the tacquigraphic notes, into an structured
 tibble/ data.frame.
 }
 \examples{
-# parse_NT("https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611")
-file_html <- list.files("inst/extdata/", full.names=TRUE)
-TN_html <- xml2::read_html(file_html,encoding = "utf8")
+# parse_TN("https://www25.senado.leg.br/web/atividade/notas-taquigraficas/-/notas/r/13611")
+file_html <- list.files("inst/extdata/", full.names = TRUE)
+TN_html <- xml2::read_html(file_html, encoding = "utf8")
 parse_TN(TN_html)
 }

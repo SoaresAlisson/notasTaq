@@ -7,6 +7,8 @@ sto::ll("sto dplyr rvest")
 options(browser = "firefox")
 detach("package:notasTaq", unload = TRUE)
 ls("package:notasTaq")
+
+baseURL <- "https://legis.senado.leg.br/dadosabertos/"
 ```
 ```{r build things}
 devtools::build_readme() # locates your README.Rmd and builds it into a README.md
@@ -336,12 +338,104 @@ content$ComissoesCongressoNacional$Colegiados |>
 ```
 
 /dadosabertos/comissao/agenda/{dataInicio}/{dataFim}
+```{r agenda}
+"/dadosabertos/comissao/agenda/{dataInicio}/{dataFim}"
+dataInicio = 20241218
+dataFim = 20251218
+
+dataInicio = 20241210
+dataFim = 20241220
+
+v =2
+URL <- paste0(baseURL, "comissao/agenda/", dataInicio,"/", dataFim, "?v=", v)
+
+http <- httr::GET(URL)
+http <- httr::GET(URL, accept = 'text/csv')
+text <- http$content |> rawToChar() 
+
+txt_list <- text |> jsonlite::fromJSON()
+
+txt_list$AgendaReuniao$noNamespaceSchemaLocation
+txt_list$AgendaReuniao$Metadados
+txt_list$AgendaReuniao$reunioes |> 
+  substring(1,10000) 
+  # readLines(n=5) |>  
+  # readLines() |>  
+  # head(1)
+  # read.csv(text=_)
+
+http <- httr::GET(URL, accept = 'text/json')
+text <- http$content |> rawToChar() |> jsonlite::fromJSON()
+
+txt_list$AgendaReuniao$noNamespaceSchemaLocation
+txt_list$AgendaReuniao$Metadados
+txt_list$AgendaReuniao$reunioes |> parse() |> eval()
+
+
+```
+
+
+
+/dadosabertos/comissao/agenda/{dataReferencia}
+```{r agenda/{dataReferencia}
+dataReferencia = 20241218 
+v = 2
+paste0(baseURL, "comissao/agenda/", dataReferencia, "?v=", v)
+
+http <- httr::GET(URL, accept = 'application/json')
+
+http <- httr::GET(URL, accept = 'application/csv')
+```
+
+/dadosabertos/comissao/agenda/mes/{mesReferencia}
+```{r mesReferencia}
+mesReferencia <- 202412
+v=2 
+# glue::glue("/dadosabertos/comissao/agenda/{dataInicio}/{dataFim}")
+URL <- glue::glue("{baseURL}comissao/agenda/mes/{mesReferencia}")
+page_ <- httr::GET(URL)
+page_
+
+http <- httr::GET(URL, accept = 'application/json')
+DF <- http$content |> rawToChar() |> jsonlite::fromJSON() |> dplyr::bind_rows() 
+DF$reunioes$reuniao |> names() 
+DF$reunioes$reuniao |> dplyr::bind_rows() 
+
+http <- httr::GET(URL, accept = 'application/csv')
+# DF <- 
+  http$content |> rawToChar() |> 
+   jsonlite::fromJSON()
+  read.csv2(text = _) 
+  readr::read_csv2() 
+|> dplyr::bind_rows() 
+```
 
 /dadosabertos/comissao/reuniao/{codigoReuniao}
+```{r reuniao/codigoReuniao}
+codigo <- 13219
+URL <- paste0(baseURL, "comissao/reuniao/", codigo)
+http <- httr::GET(URL)
+content <- http$content |> rawToChar() |> jsonlite::fromJSON()
+content |> dplyr::bind_rows()
+```
+
+/dadosabertos/comissao/{codigo}
+```{r comissao/codigo}
+codigo <- 449
+URL <- paste0(baseURL, "comissao/", codigo, '?v=3' )
+# http <- httr::GET(URL)
+http <- httr::GET(URL, accept = 'application/json')
+# content <- http$content |> rawToChar() |> rvest::read_html()
+DF <- http$content |> rawToChar() |> jsonlite::fromJSON()# 
+DF |> dplyr::bind_rows() 
+DF$Metadados
+DF$Colegiados |> dplyr::bind_rows() 
+DF$Colegiados$Colegiado |> dplyr::bind_rows() 
+```
 
 ### notas
 /dadosabertos/comissao/reuniao/notas/{codigoReuniao}
-```{r notas}
+```{r notas/codigoReuniao}
 codigo <- 13219
 URL <- paste0(baseURL, "comissao/reuniao/notas/", codigo)
 http <- httr::GET(URL)
@@ -355,6 +449,7 @@ page |> extract_metadata()
 
 ## Partidos
 "Obtém a lista dos Partidos Políticos em atividade e/ou extintos no Senado Federal"
+"/dadosabertos/composicao/lista/partidos"
 ```{r partidos}
 "/dadosabertos/composicao/lista/partidos"
 URL <- paste0(baseURL, "composicao/lista/partidos")
@@ -382,6 +477,38 @@ partidos$ListaPartidos$Partidos[[1]]|> tibble::as_tibble() |>
 # }
 #
 # get_parties()
+```
+
+
+## CPI 
+/dadosabertos/comissao/cpi/{comissao}/requerimentos
+
+https://legis.senado.leg.br/dadosabertos/comissao/cpi/cpibets/requerimentos?pagina=1&tamanho=20
+```{r }
+"/dadosabertos/comissao/cpi/{comissao}/requerimentos"
+comissao <- "cpibets"
+pagina = 1 
+tamanho = 
+
+URL <- paste0(baseURL, "comissao/cpi/", comissao, "/requerimentos?pagina=", pagina)
+http <- httr::GET(URL)
+content <- http$content |> rawToChar() |> rvest::read_html()
+content_elements <- content |>  html_elements("*") |> html_name()
+# content_txt <- content |> rvest::html_text(trim = T)
+list_resp <-  lapply(content_elements, \(i)  { content |> rvest::html_nodes(i)|> rvest::html_text() })
+names(list_resp) <- content_elements
+list_resp
+# purrr::map(content_elements, \(i)  { content |> rvest::html_nodes(i)|> rvest::html_text() })
+# for (i in content_elements) { content |> rvest::html_nodes(i) |> rvest::html_text() }
+
+content_txt <- content |> rvest::html_nodes("detail")|> rvest::html_text()
+#content_txt <- 
+  content |> rvest::html_nodes("instance")|> rvest::html_text()
+content_txt_bool <- grepl(x=content_txt, pattern = "(?i)não encontrado")
+if (content_txt_bool) { message("Not Found: " ,content_txt)}
+content <- http$content |> rawToChar() |> jsonlite::fromJSON()
+
+
 ```
 
 ## outros / confusao / shuffle / adhoc

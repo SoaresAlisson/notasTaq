@@ -13,11 +13,13 @@
 #' @export
 TodosPartidos <- "data/partidos.txt" |> read.table() |> unlist() |> unique() |> as.vector()
 
-
 siglas.estados <- "\\b(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)\\b"
 
+baseURL <- "https://legis.senado.leg.br/dadosabertos/"
 
-
+# rgx_date <- "\\d+\\/\\d+\\/\\d+"
+# rgx_date <- "(\\d+/){2}\\d+"
+# rgx_date <- "\\d+/\\d+/\\d+"
 
 #' Parse the tacquigraphic notes text
 #'

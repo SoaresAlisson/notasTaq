@@ -16,6 +16,6 @@ from_html_2_df(NT_html)}
 }
 \description{
 turns the pure html text of the tacquigraphic notes, into
-an structured tibble/ data.frame with two columns: title and text. The results
+an structured tibble/ data.frame with two columns: Title and text. The results
 from this function is send further to the parser function
 }
